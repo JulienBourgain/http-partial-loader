@@ -16,10 +16,10 @@ import {TranslateLoaderConfig, TranslateLoaderConfigToken} from './translate-loa
     })
   ],
 })
-export class LibModule {
+export class LanguageModule {
   public static forRoot(translateLoaderConfig: TranslateLoaderConfig): ModuleWithProviders {
     return {
-      ngModule: LibModule,
+      ngModule: LanguageModule,
       providers: [
         {provide: TranslateLoaderConfigToken, useValue: translateLoaderConfig}
       ]

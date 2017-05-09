@@ -40,13 +40,7 @@ export function HttpLoaderFactory(http: Http) {
     imports: [
         BrowserModule,
         HttpModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [Http]
-            }
-        })
+        LanguageModule.forRoot(new TranslateLoaderConfig('./i18n/'))
     ],
     bootstrap: [AppComponent]
 })

@@ -1,6 +1,6 @@
-
-import {TranslateLoader, TranslateService} from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 import {HttpPartialLoader} from './http-partial-loader/http-partial-loader.service';
+import {Observable} from 'rxjs/Observable';
 export class LanguageService {
   translateLoader: HttpPartialLoader;
 
@@ -20,7 +20,7 @@ export class LanguageService {
     this.reloadLang();
   }
 
-  reloadLang(lang = this.translate.currentLang) {
+  reloadLang(lang = this.translate.currentLang): Observable<any> {
     this.translate.setDefaultLang(lang);
     this.translate.resetLang(lang);
     return this.translate.use(lang);
