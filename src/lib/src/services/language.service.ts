@@ -19,8 +19,10 @@ export class LanguageService {
   }
 
   addPartials(partials: string[]) {
-    this.translateLoader.addPartials(partials);
-    this.reloadLang();
+    this.translateLoader.addPartials(partials).subscribe(
+      () => this.reloadLang(),
+      error => console.log(error)
+    );
   }
 
   reloadLang(lang = this.translate.currentLang): Observable<any> {

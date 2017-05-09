@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { HttpPartialLoader } from 'http-partial-loader';
+import { LanguageInternalService } from './language-internal.service';
 
 @Component({
   selector: 'demo-app',
@@ -14,27 +15,15 @@ export class AppComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
-    private translateLoader: TranslateLoader
+    private languageInternalService: LanguageInternalService
   ) {}
 
   ngOnInit() {
-    (<HttpPartialLoader> this.translateLoader).addPartials(['demo']);
-    // this language will be used as a fallback when a translation isn't found in the current language
-    this.translate.setDefaultLang('en');
+    this.languageInternalService.addPartials(['demo']);
 
-    // the lang to use, if the lang isn't available, it will use the current loader to get them
-    this.translate.use('en');
 
     setTimeout(() => {
-      (<HttpPartialLoader> this.translateLoader).addPartials(['async']);
-      this.reloadLang();
+      this.languageInternalService.addPartials(['async']);
     }, 2000);
-  }
-
-  reloadLang() {
-    let lang = this.translate.currentLang;
-    this.translate.setDefaultLang(lang);
-    this.translate.resetLang(lang);
-    this.translate.use(lang);
   }
 }

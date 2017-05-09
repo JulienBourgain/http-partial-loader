@@ -1,4 +1,4 @@
-import { get, map, reduce, assign, concat, uniq } from 'lodash';
+import { get, map, reduce, assign, concat, size, uniq } from 'lodash';
 import { Http } from '@angular/http';
 import { TranslateLoader } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -45,7 +45,9 @@ export class HttpPartialLoader implements TranslateLoader {
     }
   }
 
-  addPartials(partials: string[]): void {
+  addPartials(partials: string[]): Observable<any> {
+    const partialsLength = size(this.partialKeys);
     this.partialKeys = uniq(concat(this.partialKeys, partials));
+    return partialsLength !== size(this.partialKeys) ? Observable.of(true) : Observable.throw(`Nothing was added to partials with this partials requested : [${partials}] and this partials already defined : [${this.partialKeys}]`);
   }
 }

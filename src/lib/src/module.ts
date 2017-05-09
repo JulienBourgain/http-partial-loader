@@ -4,6 +4,7 @@ import { HttpPartialLoader } from './services/http-partial-loader/http-partial-l
 import {HttpModule} from '@angular/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateLoaderConfig, TranslateLoaderConfigToken} from './translate-loader.config';
+import { LanguageService } from './services/language.service';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ export class LanguageModule {
     return {
       ngModule: LanguageModule,
       providers: [
-        {provide: TranslateLoaderConfigToken, useValue: translateLoaderConfig}
+        {provide: TranslateLoaderConfigToken, useValue: translateLoaderConfig},
+        LanguageService
       ]
     };
   }
