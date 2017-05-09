@@ -1,6 +1,6 @@
 {
   "name": "http-partial-loader",
-  "version": "1.0.0-4",
+  "version": "1.0.1",
   "description": "Library QuickStart package.json from the documentation, supplemented with testing support",
   "main": "./bundles/http-partial-loader.umd.js",
   "module": "./http-partial-loader.es5.js",
@@ -32,7 +32,8 @@
     "integration": "npm run integration:aot && npm run integration:jit",
     "integration:jit": "cd integration && npm run e2e",
     "integration:aot": "cd integration && npm run e2e:aot",
-    "lint": "tslint ./src/**/*.ts -t verbose"
+    "lint": "tslint ./src/**/*.ts -t verbose",
+    "build-publish": "npm run build && cd dist && npm publish"
   },
   "peerDependencies": {
     "@angular/core": ">=4.0.0 <5.0.0 || >=4.0.0-beta <5.0.0"
