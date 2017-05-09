@@ -40,7 +40,7 @@ export function HttpLoaderFactory(http: Http) {
     imports: [
         BrowserModule,
         HttpModule,
-        LanguageModule.forRoot(new TranslateLoaderConfig('./i18n/'))
+        LanguageModule.forRoot({prefix: './i18n/', suffix: '.json'})
     ],
     bootstrap: [AppComponent]
 })

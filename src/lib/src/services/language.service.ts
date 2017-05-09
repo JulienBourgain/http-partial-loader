@@ -1,6 +1,9 @@
 import {TranslateService} from '@ngx-translate/core';
 import {HttpPartialLoader} from './http-partial-loader/http-partial-loader.service';
 import {Observable} from 'rxjs/Observable';
+import { Injectable } from '@angular/core';
+
+@Injectable()
 export class LanguageService {
   translateLoader: HttpPartialLoader;
 
