@@ -4,7 +4,8 @@ export const TranslateLoaderConfigToken = new InjectionToken<string>('TranslateL
 
 export class TranslateLoaderConfig {
   constructor (
+    public lang = 'en',
     public prefix = './assets/i18n/',
-    public suffix = '.json',
+    public suffix = '.json'
   ) {}
 }

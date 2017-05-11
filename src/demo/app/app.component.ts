@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateLoader, TranslateService } from '@ngx-translate/core';
-import { HttpPartialLoader } from 'http-partial-loader';
+import { TranslateService } from '@ngx-translate/core';
 import { LanguageInternalService } from './language-internal.service';
 
 @Component({

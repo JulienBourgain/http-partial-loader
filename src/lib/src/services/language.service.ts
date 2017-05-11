@@ -1,21 +1,23 @@
 import {TranslateService} from '@ngx-translate/core';
 import {HttpPartialLoader} from './http-partial-loader/http-partial-loader.service';
 import {Observable} from 'rxjs/Observable';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { TranslateLoaderConfig, TranslateLoaderConfigToken } from '../translate-loader.config';
 
 @Injectable()
 export class LanguageService {
   translateLoader: HttpPartialLoader;
 
   constructor(
-    private translate: TranslateService
+    private translate: TranslateService,
+    @Inject(TranslateLoaderConfigToken) private translateLoaderConfig: TranslateLoaderConfig
   ) {
     this.translateLoader = <HttpPartialLoader> translate.currentLoader;
     this.init();
   }
 
   init() {
-    this.reloadLang('en');
+    this.reloadLang(this.translateLoaderConfig.lang);
   }
 
   addPartials(partials: string[]) {

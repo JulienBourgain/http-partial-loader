@@ -12,7 +12,7 @@ import { LanguageInternalService } from './language-internal.service';
     BrowserModule,
     HttpModule,
     TranslateModule,
-    LanguageModule.forRoot({prefix: './i18n/', suffix: '.json'})
+    LanguageModule.forRoot({lang: 'fr', prefix: './i18n/', suffix: '.json'})
   ],
   providers: [
     LanguageInternalService
