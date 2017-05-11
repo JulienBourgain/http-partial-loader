@@ -1,6 +1,6 @@
 {
   "name": "http-partial-loader",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Library QuickStart package.json from the documentation, supplemented with testing support",
   "main": "./bundles/http-partial-loader.umd.js",
   "module": "./http-partial-loader.es5.js",
