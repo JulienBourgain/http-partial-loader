@@ -1,9 +1,11 @@
-import { get, map, reduce, assign, concat, size, uniq } from 'lodash';
-import { Http } from '@angular/http';
 import { TranslateLoader } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
-import {Inject, Injectable} from '@angular/core';
-import {TranslateLoaderConfig, TranslateLoaderConfigToken} from '../../translate-loader.config';
+import { Inject, Injectable } from '@angular/core';
+import { TranslateLoaderConfig, TranslateLoaderConfigToken } from '../../translate-loader.config';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/operator/first';
+import { uniq } from '../../utils';
 
 @Injectable()
 export class HttpPartialLoader implements TranslateLoader {
@@ -11,33 +13,33 @@ export class HttpPartialLoader implements TranslateLoader {
   partialKeys: string[] = [];
 
   constructor(
-    private http: Http,
+    private httpClient: HttpClient,
     @Inject(TranslateLoaderConfigToken) private translateLoaderConfig: TranslateLoaderConfig
   ) {}
 
   /**
    * Gets the translations from the server
    * @param lang
-   * @returns {any}
+   * @returns Observable<any>
    */
-  getTranslation(lang: string) {
+  getTranslation(lang: string): Observable<any> {
     return this.getPartials(lang)
-      .map(partials => reduce(partials, (memo: any, partial: any) => {
-        return assign(memo, partial);
-      }, {}));
+      .map(partials => partials.reduce((memo: any, partial: any) => {
+        return {... memo, ...partial};
+      }, {})).first();
   }
 
   getPartials(lang: string) {
-    return Observable.forkJoin(map(this.partialKeys, (partialKey: any) => this.getPartial(lang, partialKey)));
+    const partials$ = this.partialKeys.map((partialKey: any) => this.getPartial(lang, partialKey));
+    return (partials$ && partials$.length) ? Observable.forkJoin(partials$) : Observable.of([]);
   }
 
   getPartial(lang: string, partialKey: string) {
-    const partial = get(this.partials, `${lang}.${partialKey}`);
-    if (partial) {
-      return Observable.of(partial);
+
+    if (this.partials && this.partials[lang] && this.partials[lang][partialKey]) {
+      return Observable.of(this.partials[lang][partialKey]);
     } else {
-      return this.http.get(`${this.translateLoaderConfig.prefix}/${lang}/${partialKey}${this.translateLoaderConfig.suffix}`)
-        .map((res) => res.json())
+      return this.httpClient.get(`${this.translateLoaderConfig.prefix}/${lang}/${partialKey}${this.translateLoaderConfig.suffix}`)
         .map((res) => {
           this.partials[lang] = this.partials[lang] || {};
           return this.partials[lang][partialKey] = res;
@@ -46,8 +48,13 @@ export class HttpPartialLoader implements TranslateLoader {
   }
 
   addPartials(partials: string[]): Observable<any> {
-    const partialsLength = size(this.partialKeys);
-    this.partialKeys = uniq(concat(this.partialKeys, partials));
-    return partialsLength !== size(this.partialKeys) ? Observable.of(true) : Observable.throw(`Nothing was added to partials with this partials requested : [${partials}] and this partials already defined : [${this.partialKeys}]`);
+    const partialsLength = this.partialKeys.length;
+    this.partialKeys = uniq([... this.partialKeys, ...partials]);
+
+    if (partialsLength !== this.partialKeys.length) {
+      return Observable.of(true);
+    } else {
+      return Observable.throw(`Nothing was added to partials with this partials requested : [${partials}] and this partials already defined : [${this.partialKeys}]`);
+    }
   }
 }

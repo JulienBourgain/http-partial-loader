@@ -1,8 +1,9 @@
-import {TranslateService} from '@ngx-translate/core';
-import {HttpPartialLoader} from './http-partial-loader/http-partial-loader.service';
-import {Observable} from 'rxjs/Observable';
+import { TranslateService } from '@ngx-translate/core';
+import { HttpPartialLoader } from './http-partial-loader/http-partial-loader.service';
+import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable } from '@angular/core';
 import { TranslateLoaderConfig, TranslateLoaderConfigToken } from '../translate-loader.config';
+import { tap } from 'rxjs/operators/tap';
 
 @Injectable()
 export class LanguageService {
@@ -17,20 +18,22 @@ export class LanguageService {
   }
 
   init() {
-    this.reloadLang(this.translateLoaderConfig.lang);
+    this.reloadLang(this.translateLoaderConfig.lang).subscribe();
   }
 
   addPartials(partials: string[]) {
-    this.translateLoader.addPartials(partials).subscribe(
-      () => this.reloadLang(),
-      error => console.log(error)
+    this.translateLoader.addPartials(partials)
+      .switchMap(() => this.reloadLang())
+      .subscribe(
+      () => {},
+      error => console.error(error)
     );
   }
 
   reloadLang(lang = this.translate.currentLang): Observable<any> {
-    this.translate.setDefaultLang(lang);
-    this.translate.resetLang(lang);
-    return this.translate.use(lang);
+    this.translate.use(lang);
+    return this.translateLoader.getTranslation(lang)
+      .pipe(tap(res => this.translate.setTranslation(lang, res)));
   }
 
   getCurrent() {

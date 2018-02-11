@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.languageInternalService.addPartials(['demo']);
 
-
     setTimeout(() => {
       this.languageInternalService.addPartials(['async']);
     }, 2000);

@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
-export const TranslateLoaderConfigToken = new InjectionToken<string>('TranslateLoaderConfig');
+export const TranslateLoaderConfigToken = new InjectionToken<TranslateLoaderConfig>('TranslateLoaderConfig');
 
 export class TranslateLoaderConfig {
   constructor (
